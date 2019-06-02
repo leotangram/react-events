@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { CategoriesConsumer } from '../context/CategoriesContext'
 
 class Form extends Component {
   state = {
@@ -23,10 +24,28 @@ class Form extends Component {
             />
           </div>
           <div className='uk-margin' uk-margin='true'>
-            <select className="uk-select" name="category"></select>
+            <select className='uk-select' name='category'>
+              <CategoriesConsumer>
+                {value => {
+                  return value.categories.map(category => (
+                    <option
+                      key={category.id}
+                      value={category.id}
+                      data-uk-form-select
+                    >
+                      {category.name_localized}
+                    </option>
+                  ))
+                }}
+              </CategoriesConsumer>
+            </select>
           </div>
           <div>
-            <input type="submit" className="uk-button uk-button-danger" value="Busca eventos"/>
+            <input
+              type='submit'
+              className='uk-button uk-button-danger'
+              value='Busca eventos'
+            />
           </div>
         </div>
       </form>
