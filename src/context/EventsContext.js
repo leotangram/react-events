@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios'
 
 const EventsContext = React.createContext()
 export const EventsConsumer = EventsContext.Consumer
@@ -7,7 +8,9 @@ class EventsProvider extends Component {
   token = 'DRQBFOM64LL27OWCFFBI'
   sort = 'date'
 
-  state = {}
+  state = {
+    events: []
+  }
 
   getEvents = async search => {
     let url = `https://www.eventbriteapi.com/v3/events/search/?q=${
@@ -15,10 +18,25 @@ class EventsProvider extends Component {
     }&categories=${search.category}&sort_by=${this.sort}&token=${
       this.token
     }&locale=es_ES`
+
+    // Consultar la API con la URL
+    const events = await axios(url)
+    this.setState({
+      events: events.data.events
+    })
   }
 
   render() {
-    return <div />
+    return (
+      <EventsContext.Provider
+        value={{
+          events: this.state.events,
+          getEvents: this.getEvents
+        }}
+      >
+        {this.props.children}
+      </EventsContext.Provider>
+    )
   }
 }
 
